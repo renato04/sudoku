@@ -4,7 +4,7 @@ import sudoku_row
 class Board:
 
     def __init__(self):
-        self.matrix = [sudoku_row.SudokuRow(c.c.Size) for x in range(c.c.Size)]
+        self.matrix = [sudoku_row.SudokuRow(c.Size) for x in range(c.Size)]
 
     def __getitem__(self, key):
         return self.matrix[key]
@@ -29,7 +29,7 @@ class Board:
     def get_peers(self, index):
         line = index / c.Size
         col = index % c.Size
-        square = line / Sqrt * Sqrt + col / Sqrt
+        square = line / c.Sqrt * c.Sqrt + col / c.Sqrt
 
         p = []
         [p.append(cell) for cell in self.lines[line]]
@@ -85,25 +85,18 @@ class Board:
     def squares(self):
         squares = []
 
-        for i, val in range(0, c.Size):
-            l = i/Sqrt * Sqrt
-            m = (i % Sqrt) * Sqrt
-            r = range(m + 2)
+        for i, val in enumerate(range(0, c.Size)):
+            l = i/c.Sqrt * c.Sqrt
 
-            squares.append(sudoku_row.SudokuRow(self.matrix[l][r] +
-                                                self.matrix[l + 1][r] +
-                                                self.matrix[l + 2][r]))
+            m = (i % c.Sqrt) * c.Sqrt
+          
+            r = m + 2
+
+            print(l)
+            squares.append(sudoku_row.SudokuRow(self.matrix[int(l)][r] +
+                                                self.matrix[int(l) + 1][r] +
+                                                self.matrix[int(l) + 2][r]))
         return squares
 
     def show(self):
         [print(line) for line in lines]
-
-        
-                           
-        
-                        
-                     
-            
-        
-    
-        

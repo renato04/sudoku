@@ -30,7 +30,3 @@ class SudokuRowTest(unittest.TestCase):
         self.seq[0]  = 0
         self.seq[0]  = 0
         self.assertFalse(self.seq.is_repeated())
-        
-
-    
-    

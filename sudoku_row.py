@@ -16,10 +16,4 @@ class SudokuRow(list):
         for i, val in enumerate(self):
             if i not in validos:
                 return False
-        return True
-
-            
-        
-
-    
-        
+        return True   

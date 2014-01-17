@@ -84,19 +84,16 @@ class Board:
 
     def squares(self):
         squares = []
-
+        from math import floor
         for i, val in enumerate(range(0, c.Size)):
-            l = i/c.Sqrt * c.Sqrt
-
+            l = floor(i/c.Sqrt) * c.Sqrt
             m = (i % c.Sqrt) * c.Sqrt
-          
-            r = m + 2
-
-            print(l)
-            squares.append(sudoku_row.SudokuRow(self.matrix[int(l)][r] +
-                                                self.matrix[int(l) + 1][r] +
-                                                self.matrix[int(l) + 2][r]))
+                   
+            squares.append(self.matrix[int(l)][m:m+3] +
+                                                self.matrix[int(l) + 1][m:m+3] +
+                                                self.matrix[int(l) + 2][m:m+3])
+        
         return squares
 
     def show(self):
-        [print(line) for line in lines]
+        [print(line) for line in self.lines()]

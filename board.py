@@ -13,7 +13,7 @@ class Board:
         return self.matrix
 
     def columns(self):
-        return zip(*self.matrix)
+        return [item for item in zip(*self.matrix)]
 
     def all_values(self):
         return [cell for cell in row for row in matrix]
@@ -27,17 +27,35 @@ class Board:
         self.matrix[line][col] = value
 
     def get_peers(self, index):
-        line = index / c.Size
+        from math import floor
+        line = floor(index / c.Size)
         col = index % c.Size
-        square = line / c.Sqrt * c.Sqrt + col / c.Sqrt
+        square = floor(line / c.Sqrt) * c.Sqrt + floor(col / c.Sqrt)
 
         p = []
-        [p.append(cell) for cell in self.lines[line]]
-        [p.append(cell) for cell in self.columns[col]]
-        [p.append(cell) for cell in self.squares[square]]
 
-        p = [item for item in set(p) if item in range(1,c.Size)]
+        self.show()
+        print('linhas')
+        print(self.lines()[int(line)])
+        for cell in self.lines()[int(line)]:
+            p.append(cell)
+
+        print('col')
+        print(self.columns()[col])
+        for cell in self.columns()[col]:
+            p.append(cell)
+
+        print('squares')
+        print(self.squares()[int(square)])
+        for cell in self.squares()[int(square)]:
+            p.append(cell)            
+       
+        
+        print(c.Size)
+        p = [item for item in set(p) if item in range(1, c.Size + 1)]
+        print(p)
         p.sort()
+
         return p
 
     def swap_lines(self, a, b):

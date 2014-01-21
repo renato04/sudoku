@@ -38,9 +38,7 @@ class Solver:
         if board.is_valid():
             return 1
 
-        print("before")
-        board.show()
-        self.initialize_vars(board)
+        self.initialize_varss(board)
         self.goal = lambda solver : solver.done or solver.solutions >= maximum
 
         start = t.time()
@@ -61,6 +59,7 @@ class Solver:
                 break
 
             self.decide_square()
+
             if self.is_done_steps(steps):
                 return steps
 
@@ -80,34 +79,34 @@ class Solver:
 
     def decide_square(self):
         option = self.get_option()
-
         if option is None:
             self.backtrack()
         else:
             self.set_square(option)
-            check_solution()
+            self.check_solution()
 
             if self.board.is_possible():
-                next_square()
+                self.next_square()
             else:
-                exhaust_option(self.index)
+                self.exhaust_option(self.index)
 
     def backtrack(self):
         last_index = self.index
 
         if self.previous_editable_square():
             self.exhaust_option(last_index)
-            self.empty_square_last_index()
+            self.empty_square(last_index)
         else:
             self.no_more_options()
 
     def next_square(self):
-        if next_empty_square():
-            set_options()
+        if self.next_empty_square():
+            self.set_options()
 
     def set_square(self, value):
         if self.option_tree[self.index] == Solver.fixed:
             return
+        self.board.set(self.index, value)
         self.option_tree[self.index][value -1] = Solver.selected
 
     def empty_square(self, index):
@@ -118,22 +117,19 @@ class Solver:
     def exhaust_option(self, index):
         if self.option_tree[index] == Solver.fixed:
             return
-        self.option_tree[self.index][value -1] = Solver.exhausted
+        self.option_tree[index][self.board.get(index) - 1] = self.exhausted
 
     def board_impossible(self):
         print("This sudoku has no solution")
 
     def generate_options(self):
         a = [0] * c.Squares
-        print("generate_options")
         self.board.show()
         for i, val in enumerate(a):
-            print("self.board.get(i)")
-            print(self.board.get(i))
             if self.board.get(i) in c.Numbers:
-                val = Solver.Fixed
+                a[i] = Solver.fixed
             else:
-                val = [Solver.new] * c.Size
+                a[i] = [Solver.new] * c.Size
         return a
 
     def get_option(self):
@@ -142,20 +138,20 @@ class Solver:
             return None
 
         valid_options = []
-        for i, val in options:
+        for i, val in enumerate(options):
             if val == Solver.new:
                 valid_options.append(i +1)
 
         if not valid_options:
             return None
 
-        from random import shuffle
-        return shuffle(valid_options)[0]
+        from random import choice
+        return choice(valid_options)
 
     def set_options(self):
         options = self.option_tree[self.index]
 
-        for i, val in options:
+        for i, val in enumerate(options):
             options[i] = Solver.new
             if (i + 1) in self.board.get_peers(self.index):
                 options[i] = Solver.exhausted
@@ -167,7 +163,8 @@ class Solver:
     def check_solution(self):
         if self.board.is_valid():
             self.solutions += 1
-            exhaust_solution()
+            print('found ' + str(self.solutions) + '# solution')
+            self.exhaust_solution()
 
     def reached_limit(self):
         if self.total_steps > self.limit:
@@ -179,8 +176,11 @@ class Solver:
 
     def exhaust_solution(self):
         for opts in self.option_tree:
+            print(type(opts))
             if type(opts) is list:
-                map(verify_selected, opts)
+                for i, opt in enumerate(opts):
+                    if opt == Solver.selected:
+                        opts[i] = Solver.exhausted
 
     def verify_selected(val):
         if val == Solver.selected:

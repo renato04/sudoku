@@ -1,6 +1,11 @@
 class SudokuRow(list):
-    def __init__(self, size):
-        list.__init__(self, [0] * size)
+    def __init__(self, size = 0, values = None):
+        if values is None:
+            list.__init__(self, [0] * size)
+        else:
+            list.__init__(self, values)
+
+           
 
     def is_repeated(self):
         for i, val in enumerate(self):

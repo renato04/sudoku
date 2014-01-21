@@ -1,13 +1,13 @@
 import board
-import timeit as time
+import time as t
 import constants as c
 
 class Solver:
 
-    Solver.fixed = 'f'
-    Solver.selected = 's'
-    Solver.exhasuted = 'e'
-    Solver.new = 'n'
+    fixed = 'f'
+    selected = 's'
+    exhausted = 'e'
+    new = 'n'
 
     def __init__(self):
         self.by_step = False
@@ -17,64 +17,63 @@ class Solver:
         if board.is_valid():
             return board
 
-        initialize_vars(board)
-        self.goal = lambda solver : solver.exhausted or solver.board.is_valid()
+        self.initialize_vars(board)
+        self.goal = lambda solver : solver.done or solver.board.is_valid()
 
-        start = time.time()
+        start = t.time()
         if not board.is_possible():
-            self.exhausted = True
+            self.done = True
 
-        step()
-        end = time.time()
+        self.step()
+        end = t.time()
 
         print('Sudoku board solved in ' + str(end - start))
 
-        if self.exhausted:
+        if self.done:
             return board_impossible()
-        else
+        else:
             return board
 
     def count_solutions(self, board, maximum = 100):
         if board.is_valid():
             return 1
 
-        initialize_vars(board)
-        self.goal = lambda solver : solver.exhausted or solver.solutions >= maximum
+        print("before")
+        board.show()
+        self.initialize_vars(board)
+        self.goal = lambda solver : solver.done or solver.solutions >= maximum
 
-        start = time.time()
+        start = t.time()
         if not board.is_possible():
-            self.exhausted = True
+            self.done = True
 
-        step()
-        end = time.time()
+        self.step()
+        end = t.time()
 
         print('Sudoku board solved in ' + str(end - start))
-        clean_board()
+        self.clean_board()
         return self.solutions
 
     def step(self, steps = 1):
-
-        while not reached_goal():
+        while not self.reached_goal():
             self.total_steps += 1
-
-            if reached_limit()
+            if self.reached_limit():
                 break
 
-            decide_square()
-
-            if done_steps()
+            self.decide_square()
+            if self.is_done_steps(steps):
                 return steps
 
-    def initializa_vars(self, board):
+    def initialize_vars(self, board):
         self.board = board
         self.index = -1
-        self.exhausted = false
-        self.option_tree = generate_options()
+        self.done = False
+        self.option_tree = self.generate_options()
         self.step_count = 0
         self.total_steps = 0
         self.solutions = 0
 
-        next_empty_square()
+        self.next_empty_square()
 
     def reached_goal(self):
         return self.goal(self)
@@ -82,10 +81,10 @@ class Solver:
     def decide_square(self):
         option = self.get_option()
 
-        if option is not None:
-            backtrack()
-        elif:
-            set_square(option)
+        if option is None:
+            self.backtrack()
+        else:
+            self.set_square(option)
             check_solution()
 
             if self.board.is_possible():
@@ -96,11 +95,11 @@ class Solver:
     def backtrack(self):
         last_index = self.index
 
-        if previous_editable_square():
-            exhaust_option(last_index)
-            empty_square_last_index()
+        if self.previous_editable_square():
+            self.exhaust_option(last_index)
+            self.empty_square_last_index()
         else:
-            no_more_options()
+            self.no_more_options()
 
     def next_square(self):
         if next_empty_square():
@@ -109,7 +108,6 @@ class Solver:
     def set_square(self, value):
         if self.option_tree[self.index] == Solver.fixed:
             return
-
         self.option_tree[self.index][value -1] = Solver.selected
 
     def empty_square(self, index):
@@ -127,15 +125,20 @@ class Solver:
 
     def generate_options(self):
         a = [0] * c.Squares
+        print("generate_options")
+        self.board.show()
         for i, val in enumerate(a):
+            print("self.board.get(i)")
+            print(self.board.get(i))
             if self.board.get(i) in c.Numbers:
-                return Solver.Fixed
+                val = Solver.Fixed
             else:
-                return [Solver.new] * c.Size
+                val = [Solver.new] * c.Size
+        return a
 
     def get_option(self):
         options = self.option_tree[self.index]
-        if not type(options) is list
+        if not type(options) is list:
             return None
 
         valid_options = []
@@ -167,8 +170,8 @@ class Solver:
             exhaust_solution()
 
     def reached_limit(self):
-        if self.total_steps > self.limit
-            self.exhausted = True
+        if self.total_steps > self.limit:
+            self.done = True
             raise ('Number of tries reached the limit!')
             return True
 
@@ -186,7 +189,7 @@ class Solver:
             return val
 
     def is_fixed(self, index):
-        self.option_tree[index] == Solver.fixed
+        return self.option_tree[index] == Solver.fixed
 
     def is_done_steps(self, steps):
         if self.by_step:
@@ -204,7 +207,7 @@ class Solver:
         while self.is_fixed(self.index) and self.index < c.Squares - 1:
             self.index += 1
 
-        found = (self.index < c.Squares and not is_fixed(self.index))
+        found = (self.index < c.Squares and not self.is_fixed(self.index))
 
         if self.index > c.Squares - 1:
             self.index = c.Squares - 1
@@ -213,27 +216,16 @@ class Solver:
 
     def previous_editable_square(self):
         self.index -= 1
-        while self.is_fixed(self.index)
+        while self.is_fixed(self.index):
             self.index -= 1
 
         return (self.index >= 0 and not self.is_fixed(self.index))
 
     def no_more_options(self):
-        self.exhausted = True
-        print('exhausted in' + str(self.total_steps) + ' tries')
+        self.done = True
+        print('exhausted in ' + str(self.total_steps) + ' tries')
 
     def clean_board(self):
-        for i, v in c.Squares:
+        for i, v in enumerate(range(0, c.Squares - 1)):
             if not self.is_fixed(i):
                 self.board.set(i,0)
-        
-        
-                
-        
-    
-
-    
-        
-        
-        
-    

@@ -3,8 +3,13 @@ import sudoku_row
 
 class Board:
 
-    def __init__(self):
-        self.matrix = [sudoku_row.SudokuRow(c.Size) for x in range(c.Size)]
+    def __init__(self, matrix = None):
+        if matrix is None:
+            matrix = [sudoku_row.SudokuRow(c.Size) for x in range(c.Size)]
+        else:
+            matrix = [sudoku_row.SudokuRow(c.Size, row) for row in matrix]
+            
+        self.matrix = matrix  
 
     def __getitem__(self, key):
         return self.matrix[key]
@@ -13,16 +18,17 @@ class Board:
         return self.matrix
 
     def columns(self):
-        return [item for item in zip(*self.matrix)]
+        return [sudoku_row.SudokuRow(c.Size, item) for item in zip(*self.matrix)]
 
     def all_values(self):
-        return [cell for cell in row for row in matrix]
+        return [cell for cellsList in self.matrix for cell in cellsList]
 
     def get(self, index):
-        all_values[index]
+        return self.all_values()[index]
 
     def set(self, index, value):
-        line = index / c.Size
+        from math import floor
+        line = floor(index / c.Size)
         col = index % c.Size
         self.matrix[line][col] = value
 
@@ -33,27 +39,18 @@ class Board:
         square = floor(line / c.Sqrt) * c.Sqrt + floor(col / c.Sqrt)
 
         p = []
-
-        self.show()
-        print('linhas')
-        print(self.lines()[int(line)])
+       
         for cell in self.lines()[int(line)]:
             p.append(cell)
 
-        print('col')
-        print(self.columns()[col])
         for cell in self.columns()[col]:
             p.append(cell)
 
-        print('squares')
-        print(self.squares()[int(square)])
         for cell in self.squares()[int(square)]:
             p.append(cell)            
-       
-        
-        print(c.Size)
+
         p = [item for item in set(p) if item in range(1, c.Size + 1)]
-        print(p)
+
         p.sort()
 
         return p
@@ -71,31 +68,31 @@ class Board:
         self.swap_lines(5,7)
 
     def is_valid(self):
-        for line in lines:
+        for line in self.lines():
             if not line.is_valid():
                 return False
 
-        for colunm in colunms:
+        for colunm in self.colunms():
             if not colunm.is_valid():
                 return False
 
-        for square in squares:
+        for square in self.squares():
             if not square.is_valid():
                 return False
 
         return True
 
     def is_possible(self):
-        for line in lines:
-            if not line.is_repeated():
+        for line in self.lines():
+            if line.is_repeated():
+                return False
+            
+        for colunm in self.columns():
+            if colunm.is_repeated():
                 return False
 
-        for colunm in colunms:
-            if not colunm.is_repeated():
-                return False
-
-        for square in squares:
-            if not square.is_repeated():
+        for square in self.squares():
+            if square.is_repeated():
                 return False
 
         return True
@@ -107,9 +104,10 @@ class Board:
             l = floor(i/c.Sqrt) * c.Sqrt
             m = (i % c.Sqrt) * c.Sqrt
                    
-            squares.append(self.matrix[int(l)][m:m+3] +
+            squares.append(sudoku_row.SudokuRow(c.Size,
+                                                self.matrix[int(l)][m:m+3] +
                                                 self.matrix[int(l) + 1][m:m+3] +
-                                                self.matrix[int(l) + 2][m:m+3])
+                                                self.matrix[int(l) + 2][m:m+3]))
         
         return squares
 

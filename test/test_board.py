@@ -111,7 +111,30 @@ class BoardTest(unittest.TestCase):
         b.set(39, expected)
 
         if(b.all_values()[39] != expected):
-            raise Exception('Expected True. The receveid value was ' + str(received))        
+            raise Exception('Expected True. The receveid value was ' + str(received))
+
+    def test_board_should_be_valid(self):
+        expected = True
+        
+        arr = [
+          [5, 9, 1,   8, 4, 7,   6, 2, 3],   
+          [4, 2, 3,   6, 9, 1,   7, 5, 8],
+          [8, 6, 7,   2, 3, 5,   1, 4, 9],   
+
+          [1, 8, 4,   3, 5, 9,   2, 7, 6],  
+          [2, 3, 9,   4, 7, 6,   5, 8, 1],  
+          [6, 7, 5,   1, 2, 8,   3, 9, 4], 
+
+          [9, 5, 8,   7, 6, 3,   4, 1, 2],  
+          [3, 1, 2,   5, 8, 4,   9, 6, 7], 
+          [7, 4, 6,   9, 1, 2,   8, 3, 5]]
+
+        b = board.Board(arr)
+
+        received = b.is_valid()
+
+        if(expected != received):
+            raise Exception('Expected True. The receveid value was ' + str(received))       
     
         
 

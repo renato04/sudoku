@@ -2,15 +2,13 @@ import board
 import solver
 from pattern import Pattern
 import time as t
+import constants as c
 
 class Generator:
-    random_difficulty = 'r'
-    pattern_difficulty = 'p'
-    board_difficulty = 'b'
-    easy = 'e'
 
-    def generate(self, mode = random_difficulty,
-                 difficulty = easy):
+
+    def generate(self, mode = c.random_difficulty,
+                 difficulty = c.easy):
         b = None
         s = solver.Solver()
         count = 0
@@ -19,11 +17,11 @@ class Generator:
 
         while b == None or count != 1:
  
-            if mode == self.random_difficulty:
+            if mode == c.random_difficulty:
                 b = self.random(difficulty)
-            elif mode == self.pattern_difficulty:
+            elif mode == c.pattern_difficulty:
                 b = self.pattern(difficulty)
-            elif mode == self.board_difficulty:
+            elif mode == c.board_difficulty:
                 b = self.board(difficulty)
 
             count = s.count_solutions(b, 2)

@@ -21,6 +21,12 @@ class SolverTest(unittest.TestCase):
 
         if a != None:
             raise Exception
+
+    def test_should_solve_empty_board(self):
+        a = self.seq.solve(board.Board())
+
+        if a == None:
+            raise Exception
     
     def test_should_correctly_count_the_solutions_2(self):
         arr = [

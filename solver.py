@@ -63,6 +63,9 @@ class Solver:
             if self.is_done_steps(steps):
                 return steps
 
+            print('tentando')
+            self.board.show()
+
     def initialize_vars(self, board):
         self.board = board
         self.index = -1
@@ -201,13 +204,16 @@ class Solver:
 
     def next_empty_square(self):
         self.index += 1
+
+        if self.index > c.Squares - 1:
+            self.index = c.Squares - 1
+            
         while self.is_fixed(self.index) and self.index < c.Squares - 1:
             self.index += 1
 
         found = (self.index < c.Squares and not self.is_fixed(self.index))
 
-        if self.index > c.Squares - 1:
-            self.index = c.Squares - 1
+
 
         return found
 

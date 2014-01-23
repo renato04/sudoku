@@ -4,12 +4,23 @@ sys.path.append('../')
 import unittest
 import solver
 import board
-
+import generator
 
 class SolverTest(unittest.TestCase):
     def setUp(self):
         self.seq = solver.Solver()
 
+    def should_find_out_when_there_is_no_solution(self):
+        b = generator.Generator().generate()
+        b.show()
+        b[0][0] = 1
+        b[0][1] = 1
+        b[0][2] = 0
+
+        a = self.seq.solve(b)
+
+        if a != None:
+            raise Exception
     
     def test_should_correctly_count_the_solutions_2(self):
         arr = [

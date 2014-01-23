@@ -15,7 +15,7 @@ class SudokuUi:
 
     def draw(self):
         self.draw_background()
-#        draw_board()
+        self.draw_board()
 #        draw_panel()
 #        draw_cursor()
 
@@ -23,6 +23,16 @@ class SudokuUi:
         pygame.draw.rect(self.screen, (255,255,255),
                          pygame.Rect(0, 0,
                                      c.screen_width, c.screen_height))
+    def draw_board(self):
+#        self.draw_cell_backgrounds()
+        self.draw_grid()
+        self.draw_numbers()
+
+    def draw_grid(self):
+
+        for i in range(0, c.Size + 1):
+
+            
         
-##        pygame.draw.rect(self.screen, (0, 128, 255), pygame.Rect(30, 30, 60, 60))        
+    
     

@@ -31,6 +31,7 @@ class Generator:
         end = t.time()
 
         print('Sudoku board generated in ' + str(end - start))
+        return b
 
     def random(self, difficulty):
         board = self.get_board()

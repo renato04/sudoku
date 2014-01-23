@@ -12,7 +12,7 @@ class GeneratorTest(unittest.TestCase):
         expected = True
         board = self.seq.generate()
         board.show()
-        received = board.is_valid()
+        received = board.is_possible()
 
         if(expected != received):
             raise Exception('Expected True. The receveid value was ' + str(received))

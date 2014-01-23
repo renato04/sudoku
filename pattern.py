@@ -20,14 +20,16 @@ class Pattern(list):
         blocks = []
 
         blocks.append(lambda i: i % 2 == 0)
-        blocks.append(lambda i: random.choice(range(0, 4)) == 0)
-        blocks.append(lambda i: random.choice(range(0, 3)) == 1)
-        blocks.append(lambda i: i % 3 == 0 and (i/9) % 3 != 1 or 1 % 5 == 1)
+        blocks.append(lambda i: i % 2 != 0)
+#        blocks.append(lambda i: random.choice(range(0, 4)) == 0)
+#        blocks.append(lambda i: random.choice(range(0, 3)) == 1)
+#        blocks.append(lambda i: i % 3 == 0 and (i/9) % 3 != 1 or 1 % 5 == 1)
 
         block = random.choice(blocks)
 
         arr = [None] * c.Size * c.Size
         for i, val in enumerate(arr):
+            print(block(i))
             arr[i] = block(i)
 
         return Pattern(arr)

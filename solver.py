@@ -37,8 +37,8 @@ class Solver:
     def count_solutions(self, board, maximum = 100):
         if board.is_valid():
             return 1
-
-        self.initialize_varss(board)
+        
+        self.initialize_vars(board)
         self.goal = lambda solver : solver.done or solver.solutions >= maximum
 
         start = t.time()
@@ -124,7 +124,6 @@ class Solver:
 
     def generate_options(self):
         a = [0] * c.Squares
-        self.board.show()
         for i, val in enumerate(a):
             if self.board.get(i) in c.Numbers:
                 a[i] = Solver.fixed
@@ -163,7 +162,6 @@ class Solver:
     def check_solution(self):
         if self.board.is_valid():
             self.solutions += 1
-            print('found ' + str(self.solutions) + '# solution')
             self.exhaust_solution()
 
     def reached_limit(self):
@@ -176,7 +174,6 @@ class Solver:
 
     def exhaust_solution(self):
         for opts in self.option_tree:
-            print(type(opts))
             if type(opts) is list:
                 for i, opt in enumerate(opts):
                     if opt == Solver.selected:

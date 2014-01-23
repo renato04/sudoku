@@ -30,3 +30,12 @@ class SudokuRowTest(unittest.TestCase):
         self.seq[0]  = 0
         self.seq[0]  = 0
         self.assertFalse(self.seq.is_repeated())
+
+    def test_row_should_be_valid(self):
+        expected = True
+        arr = [1,2,3,4,5,6,7,8,9]
+        row = sudoku_row.SudokuRow(9,arr)
+
+        received = row.is_valid()
+        if(expected != received):
+            raise Exception('Expected True. The receveid value was ' + str(received))          

@@ -70,17 +70,17 @@ class Board:
     def is_valid(self):
         for line in self.lines():
             if not line.is_valid():
-                return True
-
-        for colunm in self.colunms():
+                return False
+        
+        for colunm in self.columns():
             if not colunm.is_valid():
-                return True
+                return False
 
         for square in self.squares():
             if not square.is_valid():
-                return True
+                return False
 
-        return False
+        return True
 
     def is_possible(self):
         for line in self.lines():

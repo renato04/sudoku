@@ -17,8 +17,8 @@ class SudokuRow(list):
         if self.is_repeated():
             return False
 
-        validos = range(1,9)
+        validos = range(1,10)
         for i, val in enumerate(self):
-            if i not in validos:
+            if val not in validos:
                 return False
         return True   
